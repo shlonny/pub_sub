@@ -1,0 +1,4 @@
+[{<<"jiffy">>,
+  {git,"https://github.com/barrel-db/jiffy.git",
+       {ref,"e93a5bdaf08f241ed748c34d4dd71da118bf8833"}},
+  0}].

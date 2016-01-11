@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/1, hello_data/1]).
+-export([start_link/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -32,9 +32,6 @@
 %%--------------------------------------------------------------------
 start_link(Key) ->
     gen_server:start_link(?MODULE, [Key], []).
-
-hello_data(Data) ->
-    io:format("Henllo Data -> ~p~n", [Data]).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -61,16 +58,14 @@ subscribe([Url]) ->
     case gen_event:start({local, Key}) of
         {ok, _Pid} ->
             gen_event:add_handler(Key, pub_sub_event, [self()]),
-            Data = calling(Url),
+            Data = json_getter:get(Url),
             gen_event:notify(Key, Data),
+            gen_event:stop(Key),
             ok;
         _ ->
             gen_event:add_handler(Key, pub_sub_event, [self()]),
             ok
     end.
-
-calling(Url) ->
-   json_getter:get(Url).
 
 %%--------------------------------------------------------------------
 %% @private
@@ -87,7 +82,6 @@ calling(Url) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_call(hello, _From, State) ->
-    io:format("Hello from server!~n", []),
     {reply, ok, State};
 handle_call(_Request, _From, State) ->
     Reply = ok,

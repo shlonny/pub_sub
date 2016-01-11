@@ -57,6 +57,7 @@ add_handler() ->
 %% @end
 %%--------------------------------------------------------------------
 init([Pid]) ->
+    io:format("got Pid ~p~n", [Pid]),
     {ok, Pid}.
 
 %%--------------------------------------------------------------------
@@ -120,7 +121,8 @@ handle_info(_Info, State) ->
 %% @spec terminate(Reason, State) -> void()
 %% @end
 %%--------------------------------------------------------------------
-terminate(_Reason, _State) ->
+terminate(_Reason, State) ->
+    io:format("Terminate called on handler: ~p~n", [State]),
     ok.
 
 %%--------------------------------------------------------------------

@@ -1,6 +1,6 @@
 {application, pub_sub,
  [
-  {description, ""},
+  {description, "simple app for testing benefits retrieval using gen_server and gen_event"},
   {vsn, "1"},
   {registered, []},
   {applications, [

@@ -1,8 +1,8 @@
 *.swp
 .DS_Store
+_build/
+.rebar3/
 rel/pub_sub
-deps/
-ebin/
 .eunit/*
 priv/scratch/
 priv/data/
