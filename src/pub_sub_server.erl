@@ -49,22 +49,23 @@ start_link(Key) ->
 %% @end
 %%--------------------------------------------------------------------
 init(Args) ->
-    subscribe(Args),
+    add_self_to_handler(Args),
     {ok, []}.
-    
-subscribe([Url]) ->
+
+add_self_to_handler([Url]) ->
     Key = list_to_atom(Url),
-    case gen_event:start({local, Key}) of
-        {ok, _Pid} ->
-            gen_event:add_handler(Key, pub_sub_event, [self()]),
-            Data = json_getter:get(Url),
-            gen_event:notify(Key, Data),
-            gen_event:stop(Key),
-            ok;
-        _ ->
-            gen_event:add_handler(Key, pub_sub_event, [self()]),
-            ok
-    end.
+    maybe_call_and_notify_handlers(gen_event:start({local, Key}), Url, Key).
+
+maybe_call_and_notify_handlers({ok, _Pid}, Url, Key) ->
+    gen_event:add_handler(Key, pub_sub_event, [self()]),
+    call_and_notify_handlers(Key, Url),
+    gen_event:stop(Key);
+maybe_call_and_notify_handlers(_, _Url, Key) ->
+    gen_event:add_handler(Key, pub_sub_event, [self()]).
+
+call_and_notify_handlers(Key, Url) ->
+    Data = json_getter:get(Url),
+    gen_event:notify(Key, Data).
 
 %%--------------------------------------------------------------------
 %% @private
