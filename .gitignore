@@ -1,0 +1,9 @@
+*.swp
+.DS_Store
+rel/pub_sub
+deps/
+ebin/
+.eunit/*
+priv/scratch/
+priv/data/
+erln8.config

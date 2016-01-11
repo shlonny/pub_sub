@@ -1,0 +1,14 @@
+{application, pub_sub,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  jiffy,
+                  inets
+                 ]},
+  {mod, { pub_sub_app, []}},
+  {env, []}
+ ]}.
