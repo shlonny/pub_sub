@@ -49,7 +49,6 @@ start_link(Key) ->
 %% @end
 %%--------------------------------------------------------------------
 init(Args) ->
-    io:format("Server wants data from -> ~p~n", [Args]),
     subscribe(Args),
     {ok, []}.
     
@@ -97,9 +96,10 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({completed, Data}, State) ->
-    io:format("~p received ~p~n", [self(), Data]),
-    {noreply, State};
+handle_cast({completed, _Data}, State) ->
+    %% io:format("~p received ~p~n", [self(), Data]),
+    %% {noreply, State};
+    {stop, "Data Received", State};
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
