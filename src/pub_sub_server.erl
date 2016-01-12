@@ -58,14 +58,20 @@ add_self_to_handler([Url]) ->
 
 maybe_call_and_notify_handlers({ok, _Pid}, Url, Key) ->
     gen_event:add_handler(Key, pub_sub_event, [self()]),
-    call_and_notify_handlers(Key, Url),
-    gen_event:stop(Key);
+    call_and_notify_handlers(Key, Url);
 maybe_call_and_notify_handlers(_, _Url, Key) ->
     gen_event:add_handler(Key, pub_sub_event, [self()]).
 
 call_and_notify_handlers(Key, Url) ->
-    Data = json_getter:get(Url),
-    gen_event:notify(Key, Data).
+    case json_getter:get(Url) of
+        {ok, Data} ->
+            gen_event:notify(Key, Data)
+    end,
+    % stopping the event manager whether we successfully
+    % got data or not. gen_event:stop calls terminate/2
+    % on all the event handlers.
+    gen_event:stop(Key).    
+    
 
 %%--------------------------------------------------------------------
 %% @private
@@ -81,8 +87,6 @@ call_and_notify_handlers(Key, Url) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call(hello, _From, State) ->
-    {reply, ok, State};
 handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.

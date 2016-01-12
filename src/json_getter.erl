@@ -7,4 +7,4 @@ get(Url) ->
     {ok, {{_Version, 200, _ReasonPhrase}, _Headers, Body}} = 
         httpc:request(get, {Url, []}, [], []),
     io:format("Made request to ~p~n",[Url]),
-    jiffy:decode(Body).
+    {ok, jiffy:decode(Body)}.
